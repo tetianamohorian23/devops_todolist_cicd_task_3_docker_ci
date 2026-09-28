@@ -18,6 +18,10 @@ jobs:
   python-ci:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./src
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,7 +65,7 @@ jobs:
         with:
           name: python-code
           path: |
-            **/*.py
+            src/**/*.py
 
   docker-ci:
     if: github.ref == 'refs/heads/main'
@@ -80,7 +84,7 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./src
+          file: ./src/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/django-todo:${{ github.sha }}
